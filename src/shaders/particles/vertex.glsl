@@ -4,10 +4,20 @@ uniform float uProgress;
 
 attribute vec3 aPositionTarget;
 
+varying vec3 vColor;
+
+#include ../includes/simplexNoise3d.glsl
+
 void main()
 {
     // Mixed position
-    float progress = uProgress;
+    float noise = simplexNoise3d(position); // remember that position is a vec3
+    noise = smoothstep(-1.0, 1.0, noise);
+
+    float duration = 0.4;
+    float delay = (1.0 - duration) * noise; // being a value that goes from 0 to 1, to obtain the morphing effect we subtract the 1.0 by the duration so that the morphing effect is "delayed
+    float end = delay + duration;
+    float progress = smoothstep(delay, end, uProgress);
     vec3 mixedPosition = mix(position, aPositionTarget, progress);
 
     // Final position
@@ -19,4 +29,7 @@ void main()
     // Point size
     gl_PointSize = uSize * uResolution.y;
     gl_PointSize *= (1.0 / - viewPosition.z);
+
+    // Varyings
+    vColor = vec3(noise);
 }
