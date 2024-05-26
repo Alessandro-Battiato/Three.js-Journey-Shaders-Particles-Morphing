@@ -105,10 +105,40 @@ gltfLoader.load("./models.glb", (gltf) => {
     const positions = gltf.scene.children.map(
         (child) => child.geometry.attributes.position
     );
+    particles.maxCount = 0;
+
+    for (const position of positions) {
+        if (position.count > particles.maxCount) {
+            particles.maxCount = position.count;
+        }
+    }
+
+    particles.positions = [];
+
+    for (const position of positions) {
+        const originalArray = position.array;
+        const newArray = new Float32Array(particles.maxCount * 3); // For 10k vertices, the array must be 3 times bigger for x y z coordinates. Also, it is necessary to create a new float 32 array because it's length can't be changed once it's been created so we create a new one here
+
+        for (let i = 0; i < particles.maxCount; i++) {
+            const i3 = i * 3;
+
+            if (i3 < originalArray.length) {
+                newArray[i3 + 0] = originalArray[i3 + 0];
+                newArray[i3 + 1] = originalArray[i3 + 1];
+                newArray[i3 + 2] = originalArray[i3 + 2];
+            } else {
+                newArray[i3 + 0] = 0;
+                newArray[i3 + 1] = 0;
+                newArray[i3 + 2] = 0;
+            }
+        }
+        particles.positions.push(new THREE.Float32BufferAttribute(newArray, 3)); // the GPU needs to know that it has to take values 3 by 3
+    }
 
     // Geometry
-    particles.geometry = new THREE.SphereGeometry(3);
-    particles.geometry.setIndex(null);
+    particles.geometry = new THREE.BufferGeometry();
+    particles.geometry.setAttribute("position", particles.positions[1]);
+    // particles.geometry.setIndex(null); not needed anymore as the models we are importing from blender are smooth
 
     // Material
     particles.material = new THREE.ShaderMaterial({
