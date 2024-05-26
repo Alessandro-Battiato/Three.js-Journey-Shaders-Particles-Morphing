@@ -111,6 +111,8 @@ particles.material = new THREE.ShaderMaterial({
             )
         ),
     },
+    blending: THREE.AdditiveBlending,
+    depthWrite: false,
 });
 
 // Points
