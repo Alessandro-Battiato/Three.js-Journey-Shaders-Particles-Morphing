@@ -127,9 +127,11 @@ gltfLoader.load("./models.glb", (gltf) => {
                 newArray[i3 + 1] = originalArray[i3 + 1];
                 newArray[i3 + 2] = originalArray[i3 + 2];
             } else {
-                newArray[i3 + 0] = 0;
-                newArray[i3 + 1] = 0;
-                newArray[i3 + 2] = 0;
+                const randomIndex =
+                    Math.floor(position.count * Math.random()) * 3;
+                newArray[i3 + 0] = originalArray[randomIndex + 0];
+                newArray[i3 + 1] = originalArray[randomIndex + 1];
+                newArray[i3 + 2] = originalArray[randomIndex + 2];
             }
         }
         particles.positions.push(new THREE.Float32BufferAttribute(newArray, 3)); // the GPU needs to know that it has to take values 3 by 3
@@ -145,7 +147,7 @@ gltfLoader.load("./models.glb", (gltf) => {
         vertexShader: particlesVertexShader,
         fragmentShader: particlesFragmentShader,
         uniforms: {
-            uSize: new THREE.Uniform(0.4),
+            uSize: new THREE.Uniform(0.2),
             uResolution: new THREE.Uniform(
                 new THREE.Vector2(
                     sizes.width * sizes.pixelRatio,
