@@ -150,7 +150,7 @@ gltfLoader.load("./models.glb", (gltf) => {
         "position",
         particles.positions[particles.index]
     );
-    particles.geometry.setAttribute("aPositionTarget", particles.positions[3]);
+    particles.geometry.setAttribute("aPositionTarget", particles.positions[3]); // when importing other models from Blender, check if particles positions array has enough elements to choose from or it might crash
     particles.geometry.setAttribute(
         "aSize",
         new THREE.BufferAttribute(sizesArray, 1)
