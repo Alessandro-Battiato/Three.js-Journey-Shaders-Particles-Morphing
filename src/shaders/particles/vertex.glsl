@@ -11,8 +11,8 @@ varying vec3 vColor;
 void main()
 {
     // Mixed position
-    float noiseOrigin = simplexNoise3d(position); // remember that position is a vec3
-    float noiseTarget = simplexNoise3d(aPositionTarget);
+    float noiseOrigin = simplexNoise3d(position * 0.2); // remember that position is a vec3
+    float noiseTarget = simplexNoise3d(aPositionTarget * 0.2);
     float noise = mix(noiseOrigin, noiseTarget, uProgress); // this fixed the issue where we were using Suzanne as initial refernce for position, which made simplex noise work only at the beginning, with Suzanne morphing into the Three.js text, but not the other way around, and this fixes the issue
     noise = smoothstep(-1.0, 1.0, noise);
 
